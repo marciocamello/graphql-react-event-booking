@@ -20,7 +20,7 @@ const events = async eventIds => {
                 creator: user.bind(this, event.creator)
             }
         });
-        
+
         return events;
     }catch(err) {
 
