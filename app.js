@@ -5,16 +5,21 @@ const mongoose = require('mongoose');
 
 const graphQLSchema = require('./graphql/schema/index');
 const graphQLResolvers = require('./graphql/resolvers/index');
+const isAuth = require('./middleware/is-auth');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.use('/graphql', graphqlHttp({
-    schema: graphQLSchema,
-    rootValue: graphQLResolvers,
-    graphiql: true
-}));
+app.use(isAuth);
+
+app.use('/graphql', 
+    graphqlHttp({
+        schema: graphQLSchema,
+        rootValue: graphQLResolvers,
+        graphiql: true
+    })
+);
 
 mongoose
     .connect(

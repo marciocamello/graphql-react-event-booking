@@ -20,10 +20,16 @@ module.exports = buildSchema(`
     }
 
     type User {
-        _id: ID!,
+        _id: ID!
         email: String!
         password: String
         createdEvents: [Event!]
+    }
+
+    type AuthData {
+        userId: ID!
+        token: String!
+        tokenExpiration: Int!
     }
 
     input EventInput { 
@@ -42,6 +48,7 @@ module.exports = buildSchema(`
         events: [Event!]!
         users: [User!]!
         bookings: [Booking!]!
+    login(email: String!, password: String!): AuthData!
     }
 
     type RootMutation {
