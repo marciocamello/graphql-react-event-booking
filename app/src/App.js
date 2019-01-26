@@ -12,20 +12,23 @@ import './App.css';
 class App extends Component {
 
   state = {
-    token: null, 
-    userId: null
+    token: localStorage.getItem('token'),
+    userId: localStorage.getItem('userId')
   }
 
   login = (token, userId, tokenExpiration) => {
     this.setState({
-      token: token, 
+      token: token,
       userId: userId
     });
   }
 
   logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('tokenExpiration');
     this.setState({
-      token: null, 
+      token: null,
       userId: null
     });
   }

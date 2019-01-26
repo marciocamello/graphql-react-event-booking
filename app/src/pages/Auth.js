@@ -6,7 +6,8 @@ import AuthContext from '../context/auth-context';
 class AuthPage extends Component{
 
     state = {
-        isLogin: true
+        isLogin: true,
+        loading: false,
     }
 
     static contextType = AuthContext;
@@ -24,9 +25,11 @@ class AuthPage extends Component{
     }
 
     submitHandler = event => {
-        
+
         event.preventDefault();
-        
+
+        this.setState({loading: 'Loading...'});
+
         const email = this.emailEl.current.value;
         const password = this.passwordEl.current.value;
 
@@ -65,7 +68,7 @@ class AuthPage extends Component{
             body: JSON.stringify(requestBody),
             headers: {
                 'Content-Type': 'application/json'
-            } 
+            }
        })
        .then(res => {
             if (res.status !== 200 && res.status !== 201){
@@ -75,6 +78,10 @@ class AuthPage extends Component{
        })
        .then(resData => {
             if (resData.data.login.token) {
+                this.setState({loading: false});
+                localStorage.setItem('token', resData.data.login.token);
+                localStorage.setItem('userId', resData.data.login.userId);
+                localStorage.setItem('tokenExpiration', resData.data.login.tokenExpiration);
                 this.context.login(
                     resData.data.login.token,
                     resData.data.login.userId,
@@ -83,11 +90,14 @@ class AuthPage extends Component{
             }
        })
        .catch(err => {
-           console.log(err)
+           console.log(err);
+           this.setState({loading: false});
        })
     };
 
     render () {
+        const { loading } = this.state;
+
         return (
             <form className="auth-form" onSubmit={this.submitHandler}>
                 <div className="form-control">
@@ -102,6 +112,9 @@ class AuthPage extends Component{
                 <button type="submit">Submit</button>
                 <button type="button" onClick={this.switchModeHandler}>Switch to {this.state.isLogin ? 'Signup' : 'Login'}</button>
                 </div>
+                {loading && (
+                    <p className="loading">{loading}</p>
+                )}
             </form>
         );
     }

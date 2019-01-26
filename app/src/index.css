@@ -4,7 +4,19 @@ body {
   font-family: sans-serif;
 }
 
+.loading{
+    width: 40rem;
+    max-width: 90%;
+    margin: 2rem auto;
+    list-style: none;
+    padding: 0.5rem;
+    background: #5101d1;
+    color: white;
+    border-radius: 3px;
+}
+
 .form-control label,
+.form-control textarea,
 .form-control input{
     width: 100%;
     display: block;
@@ -14,6 +26,12 @@ body {
     border: 1px solid #01d1d1;
     padding: 0 5px 0 5px;
     height: 25px;
+}
+
+.form-control textarea {
+    border: 1px solid #01d1d1;
+    padding: 5px;
+    resize: none;
 }
 
 .form-control label {
