@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import './Auth.css';
 import AuthContext from '../context/auth-context';
+import Spinner from '../components/Spinner/Spinner';
 
 class AuthPage extends Component{
 
     state = {
-        isLogin: true,
-        loading: false,
+        isLogin: true
     }
 
     static contextType = AuthContext;
@@ -28,7 +28,7 @@ class AuthPage extends Component{
 
         event.preventDefault();
 
-        this.setState({loading: 'Loading...'});
+        this.setState({ isLoading: true});
 
         const email = this.emailEl.current.value;
         const password = this.passwordEl.current.value;
@@ -78,7 +78,6 @@ class AuthPage extends Component{
        })
        .then(resData => {
             if (resData.data.login.token) {
-                this.setState({loading: false});
                 localStorage.setItem('token', resData.data.login.token);
                 localStorage.setItem('userId', resData.data.login.userId);
                 localStorage.setItem('tokenExpiration', resData.data.login.tokenExpiration);
@@ -87,34 +86,32 @@ class AuthPage extends Component{
                     resData.data.login.userId,
                     resData.data.login.tokenExpiration
                 );
+                this.setState({ isLoading: false});
             }
        })
        .catch(err => {
            console.log(err);
-           this.setState({loading: false});
+           this.setState({ isLoading: false});
        })
     };
 
     render () {
-        const { loading } = this.state;
-
+        const { isLoading } = this.state;
         return (
             <form className="auth-form" onSubmit={this.submitHandler}>
+                {isLoading ? <Spinner /> : ''}
                 <div className="form-control">
                     <label htmlor="email">E-mail</label>
-                    <input type="email" id="email" ref={this.emailEl}/>
+                    <input type="email" id="email" ref={this.emailEl} disabled={isLoading}/>
                 </div>
                 <div className="form-control">
                     <label htmlor="password">Password</label>
-                    <input type="password" id="password" ref={this.passwordEl}/>
+                    <input type="password" id="password" ref={this.passwordEl} disabled={isLoading}/>
                 </div>
                 <div className="form-actions">
-                <button type="submit">Submit</button>
-                <button type="button" onClick={this.switchModeHandler}>Switch to {this.state.isLogin ? 'Signup' : 'Login'}</button>
+                    <button type="submit" disabled={isLoading}>Submit</button>
+                    <button type="button" onClick={this.switchModeHandler} disabled={isLoading}>Switch to {this.state.isLogin ? 'Signup' : 'Login'}</button>
                 </div>
-                {loading && (
-                    <p className="loading">{loading}</p>
-                )}
             </form>
         );
     }
